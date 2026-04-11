@@ -1,12 +1,12 @@
 # Provided ReadMe
 
 ## 1. Title: Iris Plants Database
-	Updated Sept 21 by C.Blake - Added discrepency information
+Updated Sept 21 by C.Blake - Added discrepency information
 
 ## 2. Sources:
-     (a) Creator: R.A. Fisher
-     (b) Donor: Michael Marshall (MARSHALL%PLU@io.arc.nasa.gov)
-     (c) Date: July, 1988
+(a) Creator: R.A. Fisher
+(b) Donor: Michael Marshall (MARSHALL%PLU@io.arc.nasa.gov)
+(c) Date: July, 1988
 
 ## 3. Past Usage:
    - Publications: too many to mention!!!  Here are a few.
@@ -61,7 +61,8 @@
       -- Iris Versicolour
       -- Iris Virginica
 
-## 8. Missing Attribute Values: None
+## 8. Missing Attribute Values: 
+None
 
 ## Summary Statistics:
 
