@@ -1,4 +1,4 @@
-# Provided ReadMe
+# The Iris Dataset
 
 ## 1. Title: Iris Plants Database
 Updated Sept 21 by C.Blake - Added discrepency information
