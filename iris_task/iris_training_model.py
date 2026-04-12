@@ -5,7 +5,7 @@ import seaborn as sns
 
 np.random.seed(42)
 
-
+#ggs
 class LCD_training_model:
 
 #-------------Constructor ---------------
@@ -159,6 +159,7 @@ class_3 = df.iloc[100:150]
 
 # train_df = pd.concat([class_1.iloc[0:30], class_2.iloc[0:30], class_3.iloc[0:30]])
 # test_df = pd.concat([class_1.iloc[30:50], class_2.iloc[30:50], class_3.iloc[30:50]])
+
 
 
 def dataframe_to_dataset(dataframe):
