@@ -36,17 +36,11 @@ class LCD_training_model:
         #initialize other needed variables
         self.target_matrix = np.eye(number_of_classes)
 
-
-
-
-
 #Possible idea: crete memberfunctions to generate traning and testing dataset based on the number of datapoints used for testing 
 #and traing as an input value, instead of having the entire set as input values
 #Alternatively, create a separe class/module to handle the datset generation
         
-
 #-------------Not sure if getters and setters are in order, if they are decalre them here ---------------
-
 
 #------------- util memeber functions ---------------
     
@@ -60,8 +54,7 @@ class LCD_training_model:
     def linear_discriminant(self,x):
         #return np.matmul(self.W.T, x)
         W_T = np.transpose(self.W)
-
-        return np.matmul(W_T,x) #DxC?
+        return np.matmul(W_T,x) #DxC
     
     def MSE(self,gk,tk):
 
@@ -72,27 +65,23 @@ class LCD_training_model:
         MSE_gradient_gk = gk-tk
         gradient_g = gk*(1-gk)  #paramaters might need to be declared in opsite order
 
-
         return np.outer(xk, MSE_gradient_gk*gradient_g)
     
     def update_W(self,MSE_gradient):
         self.W = self.W - self.alpha * MSE_gradient
     
-
     def label_to_target_index(self, label):
         for index in range(len(self.class_labels)):
             if (label == self.class_labels[index]):
                 return index
             
+    #this is unused and a product of a early misunderstanding
     def safe_accumulative_vector_update(self, index, vector, value):
         if(index == 0):
             vector[index] = value
         else:
             vector[index] = vector[index-1] + value
 
-
-
-    
 #----------member functions for training and testing---------
 
 #traning function using a batch traing approach
