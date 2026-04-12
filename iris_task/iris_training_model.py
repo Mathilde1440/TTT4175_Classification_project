@@ -22,15 +22,19 @@ class LCD_training_model:
         #(Initializiung as vectors allows for storing teh oldvalues instead of writing over at each iteration)
         self.MSE_vector = np.zeros(iterations)
         self.MSE_gradient_vector = np.zeros(iterations)
+
+#Possible idea: crete memberfunctions to generate traning and testing dataset based on the number of datapoints used for testing 
+#and traing as an input value, instead of having the entire set as input values
+#Alternatively, create a separe class/module to handle the datset generation
         
 
 #-------------Not sure if getters and setters are in order, if they are decalre them here ---------------
 
 
-#-------------memeber functions ---------------
+#------------- util memeber functions ---------------
 
     def sigmoid(z):
-        return 1 / ( 1 + np.exp(z) )
+        return 1 / ( 1 + np.exp(-z) )
     
     def linear_discriminant(wi,x,wio):
         return np.transpose(wi)*x + wio
@@ -39,6 +43,7 @@ class LCD_training_model:
         return (1/2)*np.transpose(gk-tk) * (gk-tk)
     
     def MSE_gradient(gk, tk, xk):
+
         MSE_gradient_gk = gk-tk
         gradient_g = np.multiply(gk, 1-gk)
         W_gradient = np.transpose(xk)
@@ -47,6 +52,14 @@ class LCD_training_model:
     
     def new_weight(W_old, MSE_gradient, alpha):
         return W_old - alpha * MSE_gradient
+    
+#----------member functions for trining and testing---------
+    def train():
+        pass
+
+    def test():
+        pass
+
     
 
         
