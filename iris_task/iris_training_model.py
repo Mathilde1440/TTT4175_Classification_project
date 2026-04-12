@@ -31,7 +31,6 @@ class LCD_training_model:
         self.MSE_vector = np.zeros(iterations)
         self.MSE_gradient_vector = np.zeros(iterations)
 
-
         #initialize other needed variables
         self.target_matrix = np.eye(number_of_classes)
 
@@ -138,6 +137,24 @@ class LCD_training_model:
         error_rate = error_count / total
 
         return correct, error_count, error_rate, confusion_matrix
+    
+
+    def print_results(self, correct, error_count, error_rate,confusion_matrix, test):
+
+        if(test):
+            print("Testing set results: ")
+        else:
+             print("Training set results: ")
+
+        print("-----------------------------------")
+
+        print(f'Correct classifications: {correct}')
+        print(f'Misclassifications: {error_count}')
+        print(f'Error rate: {round(error_rate,3)} %')
+        print("Confusion matrix:")
+        print(f'{pd.DataFrame(confusion_matrix, index = self.class_labels,columns= self.class_labels )}')
+        print("")
+        pass
 
 
 df = pd.read_csv(
