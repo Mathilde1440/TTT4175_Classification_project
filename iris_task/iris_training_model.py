@@ -37,7 +37,8 @@ class LCD_training_model:
         return 1 / ( 1 + np.exp(-z) )
     
     def linear_discriminant(wi,x,wio):
-        return np.transpose(wi)*x + wio
+        wi_T = np.transpose(wi)
+        return np.dot(wi_T,x) + wio
     
     def MSE(gk,tk):
         return (1/2)*np.transpose(gk-tk) * (gk-tk)
@@ -54,10 +55,10 @@ class LCD_training_model:
         return W_old - alpha * MSE_gradient
     
 #----------member functions for trining and testing---------
-    def train():
+    def train(training_set):
         pass
 
-    def test():
+    def test(testing_set):
         pass
 
     
