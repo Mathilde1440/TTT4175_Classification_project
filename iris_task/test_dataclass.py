@@ -38,14 +38,20 @@ iris_model_last = iris_training_model.LCD_training_model(
 )
 
 
+#-----Train and test first model----------------
 iris_model_first.train()
-iris_model_last.train()
 
 train_first_correct, train_first_error_count, train_first_error_rate, train_first_confusion_matrix = iris_model_first.test(training_set_first)
 test_first_correct, test_first_error_count, test_first__error_rate, test_first_confusion_matrix = iris_model_first.test(test_set_first)
 
+#-----Train and test second model----------------
+iris_model_last.train()
+
 train_last_correct, train_last_error_count, train_last_error_rate, train_last_confusion_matrix = iris_model_last.test(training_set_last)
 test_last_correct, test_last_error_count, test_last_error_rate, test_last_confusion_matrix = iris_model_last.test(test_set_last)
+
+
+#-------Plot and print results---------------------
 
 iris_model_first.print_results(train_first_correct, train_first_error_count, train_first_error_rate, train_first_confusion_matrix,test=False)
 iris_model_first.print_results(test_first_correct, test_first_error_count, test_first__error_rate, test_first_confusion_matrix,test=True)
