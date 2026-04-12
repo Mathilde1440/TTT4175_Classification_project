@@ -85,7 +85,7 @@ class LCD_training_model:
 
 #traning function using a batch traing approach
     def train(self):
-        print(f'Started training with alpha = {self.alpha} and {self.iterations} \n')
+        print(f'Started training with alpha = {self.alpha} and {self.iterations} iterations \n')
         print("Progress: ", end = '')
         for index in range(self.iterations):
             MSE_k = 0
@@ -141,7 +141,7 @@ class LCD_training_model:
 
 
 df = pd.read_csv(
-    "iris_data_sets/iris.csv",
+    "iris_task/iris_data_sets/iris.csv",
     header=None
 )
 
