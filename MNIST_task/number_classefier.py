@@ -2,20 +2,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy as sp
 import sklearn
+import pandas as pd
 
 
 class MNIST_Classefier:
 
-    def __init__(self,training_set, test_set):
+    def __init__(self, data_file_path):
 
         #---------Initialize member variables-----------
-        self.training_set = training_set # might actually inculde a built in data module here, we'll see 
-        self.test_set = test_set
+        # self.training_set = training_set # might actually inculde a built in data module here, we'll see 
+        # self.test_set = test_set
+        self.data_filepath = data_file_path
+
+        self.dataFrame = pd.DataFrame
         
 
     #---------Util member functions-----------------
 
-    def divide_daset_into_chuncks(self):
+    #right now, tempplate data seems to be bin files, mightc need to cpnvert it to csv or something...
+    def divide_dataset_into_chuncks(self, chunk_size):
+        self.dataFrame = pd.read_csv(self.data_filepath, chunksize=chunk_size)
         pass
 
     #--------Traning functions, classefiers and plotting functions-------
@@ -56,10 +62,3 @@ class MNIST_Classefier:
         Ci = sklearn.cluster.KMeans.cluster_centers_
 
     pass
-
-        
-
-
-
-
-
