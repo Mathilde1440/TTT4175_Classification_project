@@ -19,7 +19,7 @@ model_1 = LCD_training_model(
     number_of_input_variables=4,
     class_labels=class_labels,
     alpha=0.01,
-    iterations=1750,
+    iterations=3000,
     random_initial_weight_matrix=True
 )
 
@@ -43,7 +43,7 @@ model_2 = LCD_training_model(
     number_of_input_variables=4,
     class_labels=class_labels,
     alpha=0.01,
-    iterations=1750,
+    iterations=3000,
     random_initial_weight_matrix=True
 )
 
@@ -86,6 +86,7 @@ for ax in axes[:, 1]:
     ax.set_ylabel("")
 
 plt.tight_layout()
+#plt.savefig("figures/first_and_last_30_for_training_plot.pdf", bbox_inches="tight")
 plt.show()
 
 # -------- MSE plotting --------
@@ -105,4 +106,5 @@ axes[1].set_ylabel("")
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
+#plt.savefig("figures/MSE_during_training_plot.pdf", bbox_inches="tight")
 plt.show()

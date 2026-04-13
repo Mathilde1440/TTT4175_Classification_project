@@ -184,5 +184,8 @@ for result in results:
     axes[1].set_xlabel("Predicted Label")
     axes[1].set_ylabel("True Label")
 
+    safe_name = result["name"].replace(",", "").replace(" ", "_").lower()
+
     plt.tight_layout()
+    #plt.savefig(f"figures/{safe_name}.pdf", bbox_inches="tight")
     plt.show()
