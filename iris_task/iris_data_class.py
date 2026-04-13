@@ -49,7 +49,8 @@ class iris_data_class:
 
 
 data_class = iris_data_class(
-    file_path="iris_task/iris_data_sets/iris.csv",
+    #file_path="iris_task/iris_data_sets/iris.csv",
+    file_path="iris_data_sets/iris.csv",
     number_of_classes=3,
     number_of_features=4,
     class_size=50,

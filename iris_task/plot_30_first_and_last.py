@@ -19,7 +19,7 @@ model_1 = LCD_training_model(
     number_of_input_variables=4,
     class_labels=class_labels,
     alpha=0.01,
-    iterations=3000,
+    iterations=1750,
     random_initial_weight_matrix=True
 )
 
@@ -43,7 +43,7 @@ model_2 = LCD_training_model(
     number_of_input_variables=4,
     class_labels=class_labels,
     alpha=0.01,
-    iterations=3000,
+    iterations=1750,
     random_initial_weight_matrix=True
 )
 
@@ -84,6 +84,25 @@ for ax in axes[:, 0]:
     ax.set_ylabel("True Label")
 for ax in axes[:, 1]:
     ax.set_ylabel("")
+
+plt.tight_layout()
+plt.show()
+
+# -------- MSE plotting --------
+fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
+fig.suptitle("Training Convergence (MSE)", fontsize=12)
+
+axes[0].plot(model_1.MSE_vector)
+axes[0].set_title("First 30 for training")
+axes[0].set_xlabel("Iteration")
+axes[0].set_ylabel("MSE")
+axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(model_2.MSE_vector)
+axes[1].set_title("Last 30 for training")
+axes[1].set_xlabel("Iteration")
+axes[1].set_ylabel("")
+axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
 plt.show()

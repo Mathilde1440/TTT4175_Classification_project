@@ -158,7 +158,8 @@ class LCD_training_model:
 
 
 df = pd.read_csv(
-    "iris_task/iris_data_sets/iris.csv",
+    #"iris_task/iris_data_sets/iris.csv",
+    "iris_data_sets/iris.csv",
     header=None
 )
 
