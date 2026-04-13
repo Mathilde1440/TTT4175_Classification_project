@@ -6,13 +6,14 @@ import pandas as pd
 
 
 class MNIST_Classefier:
+    #filpath list takes the form ['filepath_training_set', 'filepath_test_set', 'filepath_metadata']
 
-    def __init__(self, data_file_path):
+    def __init__(self, file_path_list): 
 
         #---------Initialize member variables-----------
         # self.training_set = training_set # might actually inculde a built in data module here, we'll see 
         # self.test_set = test_set
-        self.data_filepath = data_file_path
+        self.data_filepath = file_path_list
 
         self.dataFrame = pd.DataFrame
         
