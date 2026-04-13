@@ -21,8 +21,8 @@ class iris_data_class:
         classes =  set_dataframe['class'].values 
         return list(zip(data_k, classes))
     
-    def remove_data_colum(self, colum_index):
-        self.dataframe.drop(colum_index, inplace=True)
+    def remove_data_colum(self, column_index):
+        self.dataframe.drop(self.dataframe.columns[column_index], axis = 1,inplace=True)
 
     def generate_plotting_data(self, filnames, relative_filepath):
         class_data = {}
@@ -56,7 +56,8 @@ data_class = iris_data_class(
     class_lables=["Iris-setosa", "Iris-versicolor", "Iris-virginica"],
     column_labels=['sepal_lenght', 'sepal_width', 'petal_length', 'petal_width', 'class'])
 
-
+data_class.remove_data_colum(0)
+print(data_class.dataframe)
 # traning_data_set = data_class.generate_dataset(0,30)
 # plotting_set = data_class.generate_plotting_data(['class_1_csv.csv','class_2_csv.csv','class_3_csv.csv'],'iris_task/iris_data_sets/')
 # print(plotting_set)
