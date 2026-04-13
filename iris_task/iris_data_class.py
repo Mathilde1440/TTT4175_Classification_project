@@ -3,12 +3,13 @@ import pandas as pd
 
 class iris_data_class:
 
-    def __init__(self, file_path, number_of_classes, class_size, class_lables):
+    def __init__(self, file_path, number_of_classes, class_size, class_lables, column_labels):
 
-        self.dataframe = pd.read_csv(file_path, header=None, names= ['sepal_lenght', 'sepal_width', 'petal_length', 'petal_width', 'class'])
+        self.dataframe = pd.read_csv(file_path, header=None, names= column_labels)
         self.number_of_calsses = number_of_classes
         self.class_size = class_size
         self.class_lables = class_lables
+        self.column_labels = column_labels
         self.classes = []
         for i in range(self.number_of_calsses):
             start_index = i*self.class_size
@@ -27,11 +28,14 @@ class iris_data_class:
 # data_class = iris_data_class(
 #     file_path="iris_task/iris_data_sets/iris.csv",
 #     number_of_classes=3,
-#     class_size=50)
+#     class_size=50,
+#     class_lables=["Iris-setosa", "Iris-versicolor", "Iris-virginica"],
+#     column_labels=['sepal_lenght', 'sepal_width', 'petal_length', 'petal_width', 'class'])
 
 
 # traning_data_set = data_class.generate_dataset(0,30)
 # print(traning_data_set)
+
 
 
 
