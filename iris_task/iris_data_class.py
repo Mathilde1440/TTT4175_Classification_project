@@ -1,12 +1,12 @@
 import pandas as pd
 
-
 class iris_data_class:
 
-    def __init__(self, file_path, number_of_classes, class_size, class_lables, column_labels):
+    def __init__(self, file_path, number_of_classes, number_of_features, class_size, class_lables, column_labels):
 
         self.dataframe = pd.read_csv(file_path, header=None, names= column_labels)
         self.number_of_calsses = number_of_classes
+        self.number_of_features = number_of_features
         self.class_size = class_size
         self.class_lables = class_lables
         self.column_labels = column_labels
@@ -24,19 +24,40 @@ class iris_data_class:
     def remove_data_colum(self, colum_index):
         self.dataframe.drop(colum_index, inplace=True)
 
+    def generate_plotting_data(self, filnames, relative_filepath):
+        class_data = {}
 
-# data_class = iris_data_class(
-#     file_path="iris_task/iris_data_sets/iris.csv",
-#     number_of_classes=3,
-#     class_size=50,
-#     class_lables=["Iris-setosa", "Iris-versicolor", "Iris-virginica"],
-#     column_labels=['sepal_lenght', 'sepal_width', 'petal_length', 'petal_width', 'class'])
+        for label in range(self.number_of_features):
+            temp = pd.DataFrame()
+            class_data[self.column_labels[label]] = temp
+
+        for class_index in range(len(filnames)):
+            full_filpath = relative_filepath + filnames[class_index]
+            temp_data_frame = pd.read_csv(full_filpath, header=None, names= self.column_labels[:-1])
+            class_label = self.class_lables[class_index]
+            
+            for feature_index in range(self.number_of_features):
+                feature_label = self.column_labels[feature_index]
+                class_data[self.column_labels[feature_index]][class_label] = temp_data_frame[feature_label].values
+
+        return class_data
+
+            
+
+
+
+data_class = iris_data_class(
+    file_path="iris_task/iris_data_sets/iris.csv",
+    number_of_classes=3,
+    number_of_features=4,
+    class_size=50,
+    class_lables=["Iris-setosa", "Iris-versicolor", "Iris-virginica"],
+    column_labels=['sepal_lenght', 'sepal_width', 'petal_length', 'petal_width', 'class'])
 
 
 # traning_data_set = data_class.generate_dataset(0,30)
-# print(traning_data_set)
-
-
+# plotting_set = data_class.generate_plotting_data(['class_1_csv.csv','class_2_csv.csv','class_3_csv.csv'],'iris_task/iris_data_sets/')
+# print(plotting_set)
 
 
 

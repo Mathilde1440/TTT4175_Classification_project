@@ -35,3 +35,22 @@ def plot_double_confusion_matrix(train_confusion_1,test_confusion_1,train_confus
 
     plt.tight_layout()
     plt.show()
+
+
+def plot_histigram(dataFrame_list , n_bins, color_lis):
+
+    fig, ax = plt.subplots(2,2)
+    row = 0
+    for i, (feature_label, dataframe) in enumerate(dataFrame_list.items()):
+        idx = i%2
+        if i >= 2:
+            row =1
+
+        for class_n, class_label in enumerate(dataframe.columns):
+            ax[row,idx].hist(dataframe[class_label].values, n_bins, density=True,  histtype='bar', alpha=0.5 ,color =color_lis[class_n], label = class_label )
+            ax[row,idx].set_title(f'{feature_label}')
+        
+        ax[row, idx].legend()
+
+    plt.tight_layout()
+    plt.show()
