@@ -19,26 +19,29 @@ class MNIST_Classefier:
         #load data and transform to data frame
         data = sp.io.loadmat(file_path)
 
-        self.vec_size = data['vec_size']
-        self.num_train = data['num_train']
-        self.num_test = data['num_test']
+        self.metadataFrame = pd.DataFrame({
+            'vec_size': [data['vec_size'].item()],
+            'num_train': [data['num_train'].item()],
+            'num_test':  [data['num_test'].item()]
+             })
+        # self.vec_size = data['vec_size']
+        # self.num_train = data['num_train']
+        # self.num_test = data['num_test']
 
         self.train_dataFrame = pd.DataFrame(data['trainv'])
         self.train_dataFrame.insert(0, 'label', data['trainlab'])
-        self.train_dataFrame = pd.DataFrame(data['testv'])
-        self.train_dataFrame.insert(0, 'label', data['testlab'])
+        self.test_dataFrame = pd.DataFrame(data['testv'])
+        self.test_dataFrame.insert(0, 'label', data['testlab'])
+
+
 
        
         
 
     #---------Util member functions-----------------
 
-    #right now, tempplate data seems to be bin files, mightc need to cpnvert it to csv or something...
-    #the provided read function might have something to do with this will check that first
-    #seems like the data_all.mat contains the data i need, need to converte this into a csv. Will do this in matlab
-
+    #passing on this for now, might need later
     def divide_dataset_into_chuncks(self, chunk_size):
-        self.dataFrame = pd.read_csv(self.data_filepath, chunksize=chunk_size)
         pass
 
     #--------Traning functions, classefiers and plotting functions-------
@@ -47,23 +50,22 @@ class MNIST_Classefier:
         pass
 
 
-    #Have not completly decided how this one will work
-    #Right now i want this to be able to plot a arbitrry number of images, so it can be used 
-    #to solve the task relating to plotting both misclasefied and correctly classefied images
-    #Now it just plots a couple of pictures in a row, might change to plot a picture grid instead
-
     #added functions from tips in the task, not implemented correctly
+    #right now this plots based in a list of image arrays
     def plot_images(self, image_list): 
 
         for image_index in range(len(image_list)):
+            plt.figure()
+            # image_to_plot = image_list[image_index]
 
-            image_to_plot = np.testv[image_index, :].reshape((28, 28))
+            # image_to_plot = np.testv[image_index, :].reshape((28, 28))
+            image_to_plot = image_list[image_index].reshape((28, 28))
             plt.imshow(image_to_plot, cmap='gray') 
 
-            template = None
-            test = None
+            # template = None
+            # test = None
 
-            distance = sp.spatial.distance.cdist(template,test, metric='euclidean')
+            # distance = sp.spatial.distance.cdist(template,test, metric='euclidean')
 
             plt.show() 
         
@@ -79,3 +81,11 @@ class MNIST_Classefier:
         Ci = sklearn.cluster.KMeans.cluster_centers_
 
     pass
+
+
+test = MNIST_Classefier('MNIST_task/NMIST_data_sets/data_all.mat', 10000)
+# print(test.train_dataFrame)
+image_list = [test.train_dataFrame.iloc[0, 1:].values]
+# print(image_list)
+
+test.plot_images(image_list)
