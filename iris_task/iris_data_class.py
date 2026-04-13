@@ -41,9 +41,11 @@ class iris_data_class:
                 class_data[self.column_labels[feature_index]][class_label] = temp_data_frame[feature_label].values
 
         return class_data
-
+    
+    def remove_datacolum_from_plotting_data(self, dataFrame_dict, featur_label):
+        if featur_label in dataFrame_dict:
+            del dataFrame_dict[featur_label]
             
-
 
 
 data_class = iris_data_class(
@@ -58,6 +60,10 @@ data_class = iris_data_class(
 # traning_data_set = data_class.generate_dataset(0,30)
 # plotting_set = data_class.generate_plotting_data(['class_1_csv.csv','class_2_csv.csv','class_3_csv.csv'],'iris_task/iris_data_sets/')
 # print(plotting_set)
+# data_class.remove_datacolum_from_plotting_data(plotting_set, 'sepal_lenght')
+# print(plotting_set)
+
+
 
 
 
