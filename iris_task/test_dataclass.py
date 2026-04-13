@@ -7,7 +7,8 @@ iris_dataset = iris_data_class.iris_data_class(
     file_path="iris_task/iris_data_sets/iris.csv",
     number_of_classes=3,
     class_size=50,
-    class_lables=["Iris-setosa", "Iris-versicolor", "Iris-virginica"]
+    class_lables=["Iris-setosa", "Iris-versicolor", "Iris-virginica"],
+     column_labels=['sepal_lenght', 'sepal_width', 'petal_length', 'petal_width', 'class']
     )
 
 training_set_first = iris_dataset.generate_dataset(0,30)
