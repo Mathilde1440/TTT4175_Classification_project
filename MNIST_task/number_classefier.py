@@ -47,6 +47,8 @@ class MNIST_Classefier:
     #--------Traning functions, classefiers and plotting functions-------
 
     def NN_classefier(self):
+
+        # distance = sp.spatial.distance.cdist(template,test, metric='euclidean')
         pass
 
 
@@ -54,20 +56,34 @@ class MNIST_Classefier:
     #right now this plots based in a list of image arrays
     def plot_images(self, image_list): 
 
+      
+
+        fig, ax = plt.subplots(2,2)
+        row = 0
         for image_index in range(len(image_list)):
-            plt.figure()
+            idx = image_index%2
+            if image_index >= 2:
+                row =1
+
+            image_to_plot = image_list[image_index][1:].reshape((28, 28))
+
+            ax[row,idx].imshow(image_to_plot, cmap='gray') 
+            ax[row,idx].set_title(f'Label = {image_list[image_index][0]}')
+
+            ax[row, idx].legend()
+
+
             # image_to_plot = image_list[image_index]
 
             # image_to_plot = np.testv[image_index, :].reshape((28, 28))
-            image_to_plot = image_list[image_index].reshape((28, 28))
-            plt.imshow(image_to_plot, cmap='gray') 
+       
 
             # template = None
             # test = None
 
             # distance = sp.spatial.distance.cdist(template,test, metric='euclidean')
-
-            plt.show() 
+        plt.tight_layout()
+        plt.show() 
         
 
     #added functions from tips in the task, not implemented correctly
@@ -85,7 +101,10 @@ class MNIST_Classefier:
 
 test = MNIST_Classefier('MNIST_task/NMIST_data_sets/data_all.mat', 10000)
 # print(test.train_dataFrame)
-image_list = [test.train_dataFrame.iloc[0, 1:].values]
+image_list = [test.train_dataFrame.iloc[0].values,
+              test.train_dataFrame.iloc[1].values, 
+              test.train_dataFrame.iloc[2].values,
+              test.train_dataFrame.iloc[3].values]
 # print(image_list)
 
 test.plot_images(image_list)
