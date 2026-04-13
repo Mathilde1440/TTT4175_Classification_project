@@ -20,6 +20,9 @@ class MNIST_Classefier:
     #---------Util member functions-----------------
 
     #right now, tempplate data seems to be bin files, mightc need to cpnvert it to csv or something...
+    #the provided read function might have something to do with this will check that first
+    #seems like the data_all.mat contains the data i need, need to converte this into a csv. Will do this in matlab
+
     def divide_dataset_into_chuncks(self, chunk_size):
         self.dataFrame = pd.read_csv(self.data_filepath, chunksize=chunk_size)
         pass
