@@ -8,14 +8,27 @@ import pandas as pd
 class MNIST_Classefier:
     #filpath list takes the form ['filepath_training_set', 'filepath_test_set', 'filepath_metadata']
 
-    def __init__(self, file_path_list): 
+    def __init__(self, file_path, chunk_size): 
 
         #---------Initialize member variables-----------
         # self.training_set = training_set # might actually inculde a built in data module here, we'll see 
         # self.test_set = test_set
-        self.data_filepath = file_path_list
+        self.data_filepath = file_path
+        self.chunk_size = chunk_size
 
-        self.dataFrame = pd.DataFrame
+        #load data and transform to data frame
+        data = sp.io.loadmat(file_path)
+
+        self.vec_size = data['vec_size']
+        self.num_train = data['num_train']
+        self.num_test = data['num_test']
+
+        self.train_dataFrame = pd.DataFrame(data['trainv'])
+        self.train_dataFrame.insert(0, 'label', data['trainlab'])
+        self.train_dataFrame = pd.DataFrame(data['testv'])
+        self.train_dataFrame.insert(0, 'label', data['testlab'])
+
+       
         
 
     #---------Util member functions-----------------
