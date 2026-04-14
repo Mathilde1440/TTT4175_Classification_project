@@ -10,13 +10,14 @@ from collections import Counter
 class MNIST_Classefier:
     #filpath list takes the form ['filepath_training_set', 'filepath_test_set', 'filepath_metadata']
 
-    def __init__(self, file_path, num_classes, class_labels, chunk_size): 
+    def __init__(self, file_path, num_classes, class_labels, n_clusters, chunk_size): 
 
         #---------Initialize member variables-----------
 
         self.data_filepath = file_path
         self.num_classes = num_classes
         self.class_labels = class_labels
+        self.n_clusters = n_clusters
 
         self.chunk_size = chunk_size
 
@@ -47,22 +48,28 @@ class MNIST_Classefier:
 
     #--------Traning functions, classefiers and plotting functions-------
 
-    def slow_KNN_predict(self, working_node,working_node_index, k_neighbors=1):
+    def KNN_predict(self, working_node,working_node_index, k_neighbors=1, slow = True):
         distance = []
+        knn_lables = None
 
-        for comp_node_index in range(self.metadataFrame['num_train']):
-            node_to_compare = self.train_dataFrame.iloc[comp_node_index].values
-            euclidian_distance = np.linalg.norm(node_to_compare[1:] - working_node[1:])
+        if (slow):
+            for comp_node_index in range(self.metadataFrame['num_train']):
+                node_to_compare = self.train_dataFrame.iloc[comp_node_index].values
+                euclidian_distance = np.linalg.norm(node_to_compare[1:] - working_node[1:])
 
-            #stop self prediction and Prevent node from beliving it is its own neares neighbor
-            if(working_node_index==comp_node_index):
-                euclidian_distance = np.inf 
+                #stop self prediction and Prevent node from beliving it is its own neares neighbor
+                if(working_node_index==comp_node_index):
+                    euclidian_distance = np.inf 
 
-            distance.append(euclidian_distance)
+                distance.append(euclidian_distance)
+                knn_lables = [self.train_dataFrame.iloc[index,0] for index in knn_index]
+        else:
+            distance = sp.spatial.distance.cdist(self.templates,working_node[1:], metric='euclidean').flatten()
+            knn_lables = [self.temple_label[index] for index in knn_index]
 
         #pick out the k nearest neighbours and add their label to KNN_list
         knn_index = np.argsort(distance)[:k_neighbors]
-        knn_lables = [self.train_dataFrame.iloc[index,0] for index in knn_index]
+        
         
         #majorety vote
         prediction =  Counter(knn_lables).most_common(1)[0][0]
@@ -70,23 +77,59 @@ class MNIST_Classefier:
         return prediction
             
 
-    # def fast_KNN_perdict(self, K=1):
-    #     training_features = self.train_dataFrame.iloc[:,1].values
-    #     training_labels = self.train_dataFrame.iloc[:,0].values
+    def fast_KNN_perdict(self, working_node, k_neighbors):
+        #should i yse like the tast dataset here or something?
 
-    #     clusters = sklearn.cluster.KMeans(n_clusters=k_neighbors, random_state=42)
-    #     id_xi = clusters.fit_predict(training_features)
-    #     Ci = clusters.cluster_centers_
+        distance = sp.spatial.distance.cdist(self.templates,working_node[1:], metric='euclidean').flatten()
 
-    #     for n_class in range(self.num_classes):
 
-    #         filter = (n_class == training_labels)
+        knn_index = np.argsort(distance)[:k_neighbors]
+        knn_lables = [self.train_dataFrame.iloc[index,0] for index in knn_index]
+        
+        #majorety vote
+        prediction =  Counter(knn_lables).most_common(1)[0][0]
 
-    def train_KNN(self, k_neighbors=1):
+        return prediction
+
+
+
+
+
+
+    def train_KNN(self, k_neighbors=1, slow = True):
         total_predictions = []
         failed_prediction_index_list = []
         successfull_prediction_index_list = []
+
+        if (not slow):
+            self.cluster_data()
  
+
+        for working_node_index in range(self.metadataFrame['num_train']):
+            prediction = None
+
+            working_node = self.train_dataFrame.iloc[working_node_index].values
+
+            prediction = self.KNN_predict(working_node, working_node_index, k_neighbors, slow)
+
+            if (prediction != working_node[0]):
+                failed_prediction_index_list.append(working_node_index)
+            else:
+                successfull_prediction_index_list.append(working_node_index)
+
+            total_predictions.append(prediction)
+
+        return total_predictions, failed_prediction_index_list, successfull_prediction_index_list
+    
+
+
+
+    def train_KNN_faster(self, k_neighbors=1):
+        total_predictions = []
+        failed_prediction_index_list = []
+        successfull_prediction_index_list = []
+
+        self.cluster_data()
 
         for working_node_index in range(self.metadataFrame['num_train']):
             working_node = self.train_dataFrame.iloc[working_node_index].values
@@ -99,8 +142,6 @@ class MNIST_Classefier:
                 successfull_prediction_index_list.append(working_node_index)
 
             total_predictions.append(prediction)
-
-        return total_predictions, failed_prediction_index_list, successfull_prediction_index_list
 
     def train_NN(self, k_neighbors=1):
         total_predictions = []
@@ -139,23 +180,21 @@ class MNIST_Classefier:
 
         return
 
-    def train_KNN_faster(self, k_neighbors=1):
-        pass
+    # def train_KNN_faster(self, k_neighbors=1):
+    #     pass
 
 
 
         
 
-        # distance = sp.spatial.distance.cdist(template,test, metric='euclidean')
-        # distance = np.linalg.norm(template - test)
+    #     # distance = sp.spatial.distance.cdist(template,test, metric='euclidean')
+    #     # distance = np.linalg.norm(template - test)
         
 
 
     #added functions from tips in the task, not implemented correctly
     #right now this plots based in a list of image arrays
     def plot_images(self, image_list): 
-
-      
 
         fig, ax = plt.subplots(2,2)
         row = 0
@@ -186,12 +225,12 @@ class MNIST_Classefier:
         
 
     #added functions from tips in the task, not implemented correctly
-    def cluster_data(self, n_clusters):
+    def cluster_data(self):
 
         templates = []
         templatesLabels = []
 
-        #Filter out a list of teh different classes
+        #Filter out a list of the different classes
         classes = self.train_dataFrame.iloc[:, 0].unique()
 
         for digit in classes:
@@ -200,13 +239,13 @@ class MNIST_Classefier:
             relevant_training_data = self.train_dataFrame.iloc[datafilter].values
 
             #create cluster
-            clusters = sklearn.cluster.KMeans(n_clusters=n_clusters, random_state=42)
+            clusters = sklearn.cluster.KMeans(n_clusters=self.n_clusters, random_state=42)
             id_xi = clusters.fit_predict(relevant_training_data)
             Ci = clusters.cluster_centers_
 
             #add templates to list
             templates.append(Ci)
-            templatesLabels.extend(digit*n_clusters)
+            templatesLabels.extend(digit*self.n_clusters)
 
         #compress lists and update internal variables
         self.templates = np.vstac(templates)
