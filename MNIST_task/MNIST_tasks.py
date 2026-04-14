@@ -18,8 +18,8 @@ def solve_task_one(folder_path=None,figure_names=None, save_figures=False):
     confusion_matrix_fig_PCR = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels, PCR = True,fignum=2)
     failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions",3)
     succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions",4 )
-    plt.show()
-    plt.close('all')
+    # plt.show()
+    # plt.close('all')
     
     if(save_figures):
         confusion_matrix_fig.savefig(figure_names[0])
@@ -63,8 +63,8 @@ def solve_task_two(folder_path=None,figure_names=None, save_figures=False, k_nei
     failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions",3)
     succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions",4 )
 
-    plt.show()
-    plt.close()
+    # plt.show()
+    # plt.close()
 
     if(save_figures):
         confusion_matrix_fig.savefig(figure_names[0])
@@ -95,23 +95,23 @@ def solve_task_two(folder_path=None,figure_names=None, save_figures=False, k_nei
 
     return error_rate
 
-folder_path = 'test'
+folderPath = 'new_plots_2'
 
-fig_labels_task1 = ['1_cm_t1.pdf',
-                    '1_cm_PCR_t1.pdf',
-                    '1_f_fig_t1.pdf',
-                    '1_s_fig_t1.pdf']
+fig_labels_task1 = ['cm_t1.pdf',
+                    'cm_PCR_t1.pdf',
+                    'f_fig_t1.pdf',
+                    's_fig_t1.pdf']
 
-fig_labels_task2A = ['t_cm_2A.pdf',
-                     't_cm_PCR_2A.pdf',
-                     't_f_fig_2A.pdf',
-                     't_s_fig_2A.pdf']
+fig_labels_task2A = ['cm_2A.pdf',
+                     'cm_PCR_2A.pdf',
+                     'f_fig_2A.pdf',
+                     's_fig_2A.pdf']
 
-fig_labels_task2B = ['1_cm_2B.pdf',
-                     '1_cm_PCR_2B.pdf',
-                     '1_f_fig_2B.pdf',
-                     '1_s_fig_2B.pdf']
+fig_labels_task2B = ['cm_2B.pdf',
+                     'cm_PCR_2B.pdf',
+                     'f_fig_2B.pdf',
+                     's_fig_2B.pdf']
 
-error_1 = solve_task_one(folder_path = folder_path ,figure_names=fig_labels_task1,save_figures=True )
-error_2A = solve_task_two(folder_path = folder_path ,figure_names=fig_labels_task2A,save_figures=True)
-error_2B = solve_task_two(k_neighbors=7,folder_path = folder_path ,figure_names=fig_labels_task2B,save_figures=True )
+error_1 = solve_task_one(folder_path = folderPath ,figure_names=fig_labels_task1,save_figures=True )
+error_2A = solve_task_two(folder_path = folderPath ,figure_names=fig_labels_task2A,save_figures=True)
+error_2B = solve_task_two(k_neighbors=7, folder_path = folderPath ,figure_names=fig_labels_task2B,save_figures=True )
