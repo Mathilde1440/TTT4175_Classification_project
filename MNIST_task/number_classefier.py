@@ -99,66 +99,60 @@ class MNIST_Classefier:
 
     #--------Prediction------------------
 
-    def KNN_predict(self, working_node, working_node_index, k_neighbors=1):
-        distance = []
+    def KNN_predict(self, working_node, k_neighbors=1, slow = True):
 
-        for comp_node_index in range(self.metadataFrame['num_train'].values[0]):
-            node_to_compare = self.train_dataFrame.iloc[comp_node_index].values
-            euclidian_distance = np.linalg.norm(node_to_compare[1:] - working_node[1:])
-
-            #stop self prediction and Prevent node from beliving it is its own neares neighbor
-            if(working_node_index==comp_node_index):
-                euclidian_distance = np.inf 
-
-            distance.append(euclidian_distance)
+        #Calculate euclidian distance
+        if(slow):
+            distance = sp.spatial.distance.cdist(self.train_dataFrame.iloc[:,1:].values,working_node[1:].reshape(1,-1), metric='euclidean').flatten()
+        else:
+            distance = sp.spatial.distance.cdist(self.templates,working_node[1:].reshape(1,-1), metric='euclidean').flatten()
 
         #pick out the k nearest neighbours and add their label to KNN_list
         knn_index = np.argsort(distance)[:k_neighbors]
-        knn_lables = [self.train_dataFrame.iloc[index,0] for index in knn_index]
+
+        if(slow):
+            knn_lables = [self.train_dataFrame.iloc[index,0] for index in knn_index]
+        else:
+            knn_lables = [self.template_label[index] for index in knn_index]
         
         #majorety vote
         prediction =  Counter(knn_lables).most_common(1)[0][0]
 
         return prediction
             
-    def fast_KNN_perdict(self, working_node, k_neighbors):
-
-        distance = sp.spatial.distance.cdist(self.templates,working_node[1:].reshape(1,-1), metric='euclidean').flatten()
-
-        #pick out the k nearest neighbours and add their label to KNN_list
-        knn_index = np.argsort(distance)[:k_neighbors]
-        knn_lables = [self.template_label[index] for index in knn_index]
-        
-        #majorety vote
-        prediction =  Counter(knn_lables).most_common(1)[0][0]
-
-        return prediction
-    
 #-------------executions-----------------------
-    def run_KNN(self, k_neighbors=1, print_progress_updates = False):
+    def run_KNN(self, k_neighbors=1, slow = True, print_progress_updates = False):
         total_predictions = []
         failed_predictions = []
         successfull_predictions = []
         self.confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=int) 
 
         progress = -1
+        cluster_duration = 0
+        
 
-        print(f'Started slow K-neares neighbor classification with k = {k_neighbors}')
+        if (not slow):
+            print(f'Started faster K-neares neighbor classification with k = {k_neighbors}')
+            cluster_duration = self.cluster_data()
+        else:
+            print(f'Started slow K-neares neighbor classification with k = {k_neighbors}')
+
+
         starting_time = time.time()
-
+                    
         for working_node_index in range(self.metadataFrame['num_test'].values[0]):
 
             working_node = self.test_dataFrame.iloc[working_node_index].values
-
-            prediction = self.KNN_predict(working_node, working_node_index, k_neighbors)
+            prediction = self.KNN_predict(working_node, k_neighbors, slow)
+            
             correct_label = working_node[0]
 
-            plot_metadta = [working_node_index, prediction]
+            metadata = [working_node_index, prediction]
 
             if (prediction != correct_label):
-                failed_predictions.append(plot_metadta)
+                failed_predictions.append(metadata)
             else:
-                successfull_predictions.append(plot_metadta)
+                successfull_predictions.append(metadata)
 
             total_predictions.append(prediction)
             self.confusion_matrix[correct_label, prediction] += 1
@@ -167,49 +161,11 @@ class MNIST_Classefier:
                 progress = self.print_progress(working_node_index,progress,1)
 
         endtime = time.time()
-        print(f'Finised classification. \n Duration = {endtime-starting_time}')
+
+        classification_time = endtime-starting_time
+        print(f'Finised classification. \n Classification duration = {classification_time} \n Total duratiom(with clustering): { cluster_duration+classification_time} ')
 
         return total_predictions, failed_predictions, successfull_predictions
-    
-
-    def run_KNN_faster (self, k_neighbors=1, print_progress_updates = False):
-        total_predictions = []
-        failed_prediction_index_list = []
-        successfull_prediction_index_list = []
-        self.confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=int) 
-
-        progress = -1
-
-
-        clusterTimeDuration = self.cluster_data()
-
-        print(f'Started faster K-neares neighbor classification with k = {k_neighbors}')
-        starting_time = time.time()
-
-        for working_node_index in range(self.metadataFrame['num_test'].values[0]):
-            working_node = self.test_dataFrame.iloc[working_node_index].values
-
-            prediction = self.fast_KNN_perdict(working_node, k_neighbors)
-            correct_label = working_node[0]
-            plot_metadta = [working_node_index, prediction]
-
-            if (prediction != correct_label):
-                failed_prediction_index_list.append(plot_metadta)
-            else:
-                successfull_prediction_index_list.append(plot_metadta)
-
-            total_predictions.append(prediction)
-            self.confusion_matrix[correct_label, prediction] += 1
-
-            if(print_progress_updates):
-                progress = self.print_progress(working_node_index,progress,1)
-
-        endtime = time.time()
-        classification_time = endtime-starting_time
-        print(f'Finised classification. \n Classification duration = {classification_time} \n Total duratiom(with clustering): { clusterTimeDuration+classification_time} ')
-
-        return total_predictions, failed_prediction_index_list, successfull_prediction_index_list
-
 
 #-----------------Plotting -----------------------------
     def plot_images(self,image_list, plot_title): 
@@ -223,13 +179,12 @@ class MNIST_Classefier:
                 row =1
 
             image_data_plot = self.test_dataFrame.iloc[image_list[image_index][0]].values
-          
         
             image_to_plot = image_data_plot[1:].reshape((28, 28))
             correct_label = image_data_plot[0]
 
             ax[row,idx].imshow(image_to_plot, cmap='gray') 
-            ax[row,idx].set_title(f'Correct label: {correct_label}, Predcited label: {image_list[image_index][1]} ')
+            ax[row,idx].set_title(f'Correct: {correct_label}, Predcited: {image_list[image_index][1]} ')
             ax[row, idx].axis('off')
         plt.tight_layout()
         plt.show()

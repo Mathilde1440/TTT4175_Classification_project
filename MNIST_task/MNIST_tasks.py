@@ -9,7 +9,7 @@ def solve_task_one(figure_names=None, save_figures=False):
                                                      n_clusters=64, 
                                                      chunk_size=10000)
     
-    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN(print_progress_updates=True)
+    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN(slow = True,print_progress_updates=True)
 
     confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels)
     failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions")
@@ -28,7 +28,7 @@ def solve_task_two(figure_names=None, save_figures=False, k_neighbors = 1):
                                                      n_clusters=64, 
                                                      chunk_size=10000)
     
-    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN_faster(k_neighbors, print_progress_updates=True)
+    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN(k_neighbors = k_neighbors , slow = False, print_progress_updates=True)
 
     confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels)
     failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions")
