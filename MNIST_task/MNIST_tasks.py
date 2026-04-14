@@ -14,17 +14,18 @@ def solve_task_one(folder_path=None,figure_names=None, save_figures=False):
     
     time, error_rate, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN(slow = True)
 
-    confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels,1)
-    failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions",2)
-    succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions",3 )
+    confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels,fignum=1)
+    confusion_matrix_fig_PCR = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels, PCR = True,fignum=2)
+    failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions",3)
+    succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions",4 )
     plt.show()
     plt.close('all')
     
     if(save_figures):
         confusion_matrix_fig.savefig(figure_names[0])
-        failure_fig.savefig(figure_names[1])
-        succsess_fig.savefig(figure_names[2])
-
+        confusion_matrix_fig_PCR.savefig(figure_names[1])
+        failure_fig.savefig(figure_names[2])
+        succsess_fig.savefig(figure_names[3])
 
         destination_folder = Path('MNIST_task/plots/'+ folder_path)
         if not os.path.exists(destination_folder):
@@ -33,13 +34,17 @@ def solve_task_one(folder_path=None,figure_names=None, save_figures=False):
         os.replace(figure_names[0], os.path.join(destination_folder, figure_names[0]))
         os.replace(figure_names[1], os.path.join(destination_folder, figure_names[1]))
         os.replace(figure_names[2], os.path.join(destination_folder, figure_names[2]))
+        os.replace(figure_names[3], os.path.join(destination_folder, figure_names[3]))
 
-        with open(os.path.join(destination_folder, 'stats.txt'), 'w') as f:
+
+        time_min = int(time[0] / 60)
+        time_s = time[0] - time_min * 60
+
+        with open(os.path.join(destination_folder, 'stats_1.txt'), 'w') as f:
             f.write(f'Error rate: {error_rate}\n')
             f.write(f'Failed predictions: {len(failed_predictions)}\n')
-            f.write(f'Total Classification time: {time[0]}\n')
-            f.write(f'Cluster time:  {time[1]}\n')
-            f.write(f'Classification (wo. clustertime): {time[0]-time[1]}\n')
+            f.write(f'Total Classification time: {time[0]} ~ {time_min} min {time_s} s \n')
+
 
     return error_rate
 
@@ -53,17 +58,19 @@ def solve_task_two(folder_path=None,figure_names=None, save_figures=False, k_nei
     
     time,error_rate, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN(k_neighbors = k_neighbors , slow = False)
 
-    confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels)
-    failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions",2)
-    succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions",3 )
+    confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels, fignum=1)
+    confusion_matrix_fig_PCR = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels, PCR = True,fignum=2)
+    failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions",3)
+    succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions",4 )
 
     plt.show()
     plt.close()
 
     if(save_figures):
         confusion_matrix_fig.savefig(figure_names[0])
-        failure_fig.savefig(figure_names[1])
-        succsess_fig.savefig(figure_names[2])
+        confusion_matrix_fig_PCR.savefig(figure_names[1])
+        failure_fig.savefig(figure_names[2])
+        succsess_fig.savefig(figure_names[3])
 
         destination_folder = Path('MNIST_task/plots/'+ folder_path)
         if not os.path.exists(destination_folder):
@@ -72,8 +79,14 @@ def solve_task_two(folder_path=None,figure_names=None, save_figures=False, k_nei
         os.replace(figure_names[0], os.path.join(destination_folder, figure_names[0]))
         os.replace(figure_names[1], os.path.join(destination_folder, figure_names[1]))
         os.replace(figure_names[2], os.path.join(destination_folder, figure_names[2]))
+        os.replace(figure_names[3], os.path.join(destination_folder, figure_names[3]))
 
-        with open(os.path.join(destination_folder, 'stats.txt'), 'w') as f:
+        txt_filname = 'stats_2A.txt'
+        if (k_neighbors != 1):
+            txt_filname = 'stats_2B.txt'
+   
+
+        with open(os.path.join(destination_folder, txt_filname), 'w') as f:
             f.write(f'Error rate: {error_rate}\n')
             f.write(f'Failed predictions: {len(failed_predictions)}\n')
             f.write(f'Total Classification time: {time[0]}\n')
@@ -85,17 +98,20 @@ def solve_task_two(folder_path=None,figure_names=None, save_figures=False, k_nei
 folder_path = 'test'
 
 fig_labels_task1 = ['1_cm_t1.pdf',
+                    '1_cm_PCR_t1.pdf',
                     '1_f_fig_t1.pdf',
                     '1_s_fig_t1.pdf']
 
 fig_labels_task2A = ['t_cm_2A.pdf',
+                     't_cm_PCR_2A.pdf',
                      't_f_fig_2A.pdf',
                      't_s_fig_2A.pdf']
 
 fig_labels_task2B = ['1_cm_2B.pdf',
+                     '1_cm_PCR_2B.pdf',
                      '1_f_fig_2B.pdf',
                      '1_s_fig_2B.pdf']
 
-error_1 = solve_task_one(folder_path = folder_path ,figure_names=fig_labels_task2A,save_figures=True )
-error_2A = solve_task_two(folder_path = folder_path ,figure_names=fig_labels_task2A,save_figures=True )
-error_2B = solve_task_two(folder_path = folder_path ,figure_names=fig_labels_task2A,save_figures=True )
+error_1 = solve_task_one(folder_path = folder_path ,figure_names=fig_labels_task1,save_figures=True )
+error_2A = solve_task_two(folder_path = folder_path ,figure_names=fig_labels_task2A,save_figures=True)
+error_2B = solve_task_two(k_neighbors=7,folder_path = folder_path ,figure_names=fig_labels_task2B,save_figures=True )

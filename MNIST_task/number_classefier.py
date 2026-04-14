@@ -195,14 +195,24 @@ class MNIST_Classefier:
         
         return fig
 
-    def plot_confusion_matrix(self, plot_title, class_labels,fignum = None):
+    def plot_confusion_matrix(self, plot_title, class_labels, PCR = False, fignum = None):
         fig, ax = plt.subplots(num = fignum)
+        fmt="d"
 
-        sns.heatmap(self.confusion_matrix, annot=True, fmt="d", cmap="Blues",
+        xlabel = "Correct class"
+        ylable = "Predcited class"
+
+        if(PCR):
+            self.confusion_matrix = (self.confusion_matrix) / self.confusion_matrix.sum(axis=1, keepdims=True) * 100
+            fmt = ".1f"
+            xlabel += ' [%]'
+            ylable += ' [%]'
+
+        sns.heatmap(self.confusion_matrix, annot=True, fmt= fmt, cmap="Blues",
             xticklabels=class_labels, yticklabels=class_labels, cbar=True, ax=ax)
         ax.set_title(plot_title)
-        ax.set_xlabel("Correct class")
-        ax.set_ylabel("Predcited class")
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylable)
 
         return fig
         
@@ -217,3 +227,4 @@ class MNIST_Classefier:
               
 # klassefier.plot_images(image_list, "some plots")
 # # ]
+
