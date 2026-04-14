@@ -1,12 +1,14 @@
 import matplotlib.pyplot as plt
+import seaborn as sns
+
 import numpy as np
 import scipy as sp
+
 import sklearn
 import pandas as pd
+
 import time
-
 from collections import Counter
-
 
 
 class MNIST_Classefier:
@@ -50,7 +52,7 @@ class MNIST_Classefier:
 
     def cluster_data(self):
         print("Started clustering...")
-        starting_time = time.Time()
+        starting_time = time.time()
 
         templates = []
         templatesLabels = []
@@ -73,10 +75,10 @@ class MNIST_Classefier:
             templatesLabels.extend([digit]*self.n_clusters)
 
         #compress lists and update internal variables
-        self.templates = np.vstac(templates)
+        self.templates = np.vstack(templates)
         self.template_label = np.array(templatesLabels)
 
-        endtime = time.Time()
+        endtime = time.time()
         duration = endtime-starting_time
 
         print(f'Finised clustering. \n Duration = {duration}')
@@ -86,9 +88,8 @@ class MNIST_Classefier:
 
     def KNN_predict(self, working_node, working_node_index, k_neighbors=1):
         distance = []
-        knn_lables = None
 
-        for comp_node_index in range(self.metadataFrame['num_train']):
+        for comp_node_index in range(self.metadataFrame['num_train'].values[0]):
             node_to_compare = self.train_dataFrame.iloc[comp_node_index].values
             euclidian_distance = np.linalg.norm(node_to_compare[1:] - working_node[1:])
 
@@ -123,32 +124,34 @@ class MNIST_Classefier:
 #-------------executions-----------------------
     def run_KNN(self, k_neighbors=1):
         total_predictions = []
-        failed_prediction_index_list = []
-        successfull_prediction_index_list = []
+        failed_predictions = []
+        successfull_predictions = []
         self.confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=int) 
 
         print(f'Started slow K-neares neighbor classification with k = {k_neighbors}')
-        starting_time = time.Time()
+        starting_time = time.time()
 
-        for working_node_index in range(self.metadataFrame['num_test']):
+        for working_node_index in range(self.metadataFrame['num_test'].values[0]):
 
             working_node = self.test_dataFrame.iloc[working_node_index].values
 
             prediction = self.KNN_predict(working_node, working_node_index, k_neighbors)
-            correct_label = prediction != working_node[0]
+            correct_label = working_node[0]
+
+            plot_metadta = [working_node_index, prediction]
 
             if (prediction != correct_label):
-                failed_prediction_index_list.append(working_node_index)
+                failed_predictions.append(plot_metadta)
             else:
-                successfull_prediction_index_list.append(working_node_index)
+                successfull_predictions.append(plot_metadta)
 
             total_predictions.append(prediction)
             self.confusion_matrix[correct_label, prediction] += 1
 
-        endtime = time.Time()
+        endtime = time.time()
         print(f'Finised classification. \n Duration = {endtime-starting_time}')
 
-        return total_predictions, failed_prediction_index_list, successfull_prediction_index_list
+        return total_predictions, failed_predictions, successfull_predictions
     
 
     def run_KNN_faster (self, k_neighbors=1):
@@ -160,23 +163,24 @@ class MNIST_Classefier:
         clusterTimeDuration = self.cluster_data()
 
         print(f'Started faster K-neares neighbor classification with k = {k_neighbors}')
-        starting_time = time.Time()
+        starting_time = time.time()
 
-        for working_node_index in range(self.metadataFrame['num_test']):
+        for working_node_index in range(self.metadataFrame['num_test'].values[0]):
             working_node = self.test_dataFrame.iloc[working_node_index].values
 
             prediction = self.fast_KNN_perdict(working_node, k_neighbors)
-            correct_label = prediction != working_node[0]
+            correct_label = working_node[0]
+            plot_metadta = [working_node_index, prediction]
 
             if (prediction != correct_label):
-                failed_prediction_index_list.append(working_node_index)
+                failed_prediction_index_list.append(plot_metadta)
             else:
-                successfull_prediction_index_list.append(working_node_index)
+                successfull_prediction_index_list.append(plot_metadta)
 
             total_predictions.append(prediction)
             self.confusion_matrix[correct_label, prediction] += 1
 
-        endtime = time.Time()
+        endtime = time.time()
         classification_time = endtime-starting_time
         print(f'Finised classification. \n Classification duration = {classification_time} \n Total duratiom(with clustering): { clusterTimeDuration+classification_time} ')
 
@@ -184,24 +188,46 @@ class MNIST_Classefier:
 
 
 #-----------------Plotting -----------------------------
-    def plot_images(self, image_list): 
+    def plot_images(self,image_list, plot_title): 
         fig, ax = plt.subplots(2,2)
+        fig.suptitle(plot_title, fontsize=16)
+
         row = 0
         for image_index in range(len(image_list)):
             idx = image_index%2
             if image_index >= 2:
                 row =1
 
-            image_to_plot = image_list[image_index][1:].reshape((28, 28))
+            image_data_plot = self.train_dataFrame.iloc[image_list[image_index][0]].values
+          
+        
+            image_to_plot = image_data_plot[1:].reshape((28, 28))
+            correct_label = image_data_plot[0]
 
             ax[row,idx].imshow(image_to_plot, cmap='gray') 
-            ax[row,idx].set_title(f'Label = {image_list[image_index][0]}')
+            ax[row,idx].set_title(f'Correct label: {correct_label}, Predcited label: {image_list[image_index][1]} ')
 
             ax[row, idx].legend()
 
         plt.tight_layout()
         plt.show() 
+
+    def plot_confusion_matrix(self, plot_title, class_labels):
+        fig, ax = plt.subplots()
+
+        sns.heatmap(self.confusion_matrix, annot=True, fmt="d", cmap="Blues",
+            xticklabels=class_labels, yticklabels=class_labels, cbar=False, ax=ax)
+        ax.set_title(plot_title)
+        pass
         
         
 
-# MNist_klassefier = MNIST_Classefier('MNIST_task/NMIST_data_sets/data_all.mat', 10, [0,1,2,3,4,5,6,7,8,9],  10000)
+# klassefier = MNIST_Classefier('MNIST_task/NMIST_data_sets/data_all.mat', 10, [0,1,2,3,4,5,6,7,8,9], 64, 10000)
+
+# print(klassefier.metadataFrame['num_test'].values[0])
+# image_list = [[0, 6],
+#               [1,4],
+#               [2,2]]
+              
+# klassefier.plot_images(image_list, "some plots")
+# # ]
