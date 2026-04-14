@@ -1,4 +1,5 @@
 from number_classefier import MNIST_Classefier
+import matplotlib.pyplot as plt
 
 def solve_task_one(figure_names=None, save_figures=False):
 
@@ -8,7 +9,7 @@ def solve_task_one(figure_names=None, save_figures=False):
                                                      n_clusters=64, 
                                                      chunk_size=10000)
     
-    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN()
+    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN(print_progress_updates=True)
 
     confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels)
     failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions")
@@ -27,11 +28,13 @@ def solve_task_two(figure_names=None, save_figures=False, k_neighbors = 1):
                                                      n_clusters=64, 
                                                      chunk_size=10000)
     
-    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_faster_KNN(k_neighbors)
+    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN_faster(k_neighbors, print_progress_updates=True)
 
     confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels)
     failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions")
     succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions" )
+
+    plt.show()
 
     if(save_figures):
         confusion_matrix_fig.savefig(figure_names[0])
@@ -40,6 +43,6 @@ def solve_task_two(figure_names=None, save_figures=False, k_neighbors = 1):
 
 
 
-solve_task_one()
-# solve_task_two()
+# solve_task_one()
+solve_task_two()
 # solve_task_two(k_neighbors=7)

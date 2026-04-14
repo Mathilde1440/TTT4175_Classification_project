@@ -45,6 +45,19 @@ class MNIST_Classefier:
 
 
     #---------Util member functions-----------------
+    def print_progress(self, working_index, last_progress_update, update_frequency):
+        current_progress = working_index / self.metadataFrame['num_test'].values[0]*100
+        new_milestone = None
+        # print(current_progress)
+
+        if ( int(current_progress) >= int(last_progress_update) ):
+
+            new_milestone = int(current_progress) + update_frequency
+            print(f'Progress update: {new_milestone} % ')
+        
+            return new_milestone
+        
+        return last_progress_update
 
     #passing on this for now, might need later
     def divide_dataset_into_chuncks(self, chunk_size):
@@ -122,11 +135,13 @@ class MNIST_Classefier:
         return prediction
     
 #-------------executions-----------------------
-    def run_KNN(self, k_neighbors=1):
+    def run_KNN(self, k_neighbors=1, print_progress_updates = False):
         total_predictions = []
         failed_predictions = []
         successfull_predictions = []
         self.confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=int) 
+
+        progress = -1
 
         print(f'Started slow K-neares neighbor classification with k = {k_neighbors}')
         starting_time = time.time()
@@ -148,17 +163,23 @@ class MNIST_Classefier:
             total_predictions.append(prediction)
             self.confusion_matrix[correct_label, prediction] += 1
 
+            if(print_progress_updates):
+                progress = self.print_progress(working_node_index,progress,1)
+
         endtime = time.time()
         print(f'Finised classification. \n Duration = {endtime-starting_time}')
 
         return total_predictions, failed_predictions, successfull_predictions
     
 
-    def run_KNN_faster (self, k_neighbors=1):
+    def run_KNN_faster (self, k_neighbors=1, print_progress_updates = False):
         total_predictions = []
         failed_prediction_index_list = []
         successfull_prediction_index_list = []
         self.confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=int) 
+
+        progress = -1
+
 
         clusterTimeDuration = self.cluster_data()
 
@@ -180,6 +201,9 @@ class MNIST_Classefier:
             total_predictions.append(prediction)
             self.confusion_matrix[correct_label, prediction] += 1
 
+            if(print_progress_updates):
+                progress = self.print_progress(working_node_index,progress,1)
+
         endtime = time.time()
         classification_time = endtime-starting_time
         print(f'Finised classification. \n Classification duration = {classification_time} \n Total duratiom(with clustering): { clusterTimeDuration+classification_time} ')
@@ -198,7 +222,7 @@ class MNIST_Classefier:
             if image_index >= 2:
                 row =1
 
-            image_data_plot = self.train_dataFrame.iloc[image_list[image_index][0]].values
+            image_data_plot = self.test_dataFrame.iloc[image_list[image_index][0]].values
           
         
             image_to_plot = image_data_plot[1:].reshape((28, 28))
@@ -206,11 +230,10 @@ class MNIST_Classefier:
 
             ax[row,idx].imshow(image_to_plot, cmap='gray') 
             ax[row,idx].set_title(f'Correct label: {correct_label}, Predcited label: {image_list[image_index][1]} ')
-
-            ax[row, idx].legend()
-
+            ax[row, idx].axis('off')
         plt.tight_layout()
-        plt.show(block=False) 
+        plt.show()
+
         
         return fig
 
