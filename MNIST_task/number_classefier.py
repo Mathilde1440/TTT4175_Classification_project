@@ -122,7 +122,7 @@ class MNIST_Classefier:
             
 #-------------executions-----------------------
     def run_KNN(self, k_neighbors=1, slow = True, print_progress_updates = False):
-        total_predictions = []
+        # total_predictions = []
         failed_predictions = []
         successfull_predictions = []
         self.confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=int) 
@@ -154,18 +154,20 @@ class MNIST_Classefier:
             else:
                 successfull_predictions.append(metadata)
 
-            total_predictions.append(prediction)
+            # total_predictions.append(prediction)
             self.confusion_matrix[correct_label, prediction] += 1
 
             if(print_progress_updates):
                 progress = self.print_progress(working_node_index,progress,1)
 
+
+        error_rate = len(failed_predictions)/self.metadataFrame['num_test'].values[0]
         endtime = time.time()
 
         classification_time = endtime-starting_time
-        print(f'Finised classification. \n Classification duration = {classification_time} \n Total duratiom(with clustering): { cluster_duration+classification_time} ')
+        print(f'Finised classification. Error rate: {error_rate} \n Classification duration = {classification_time} \n Total duratiom(with clustering): { cluster_duration+classification_time} ')
 
-        return total_predictions, failed_predictions, successfull_predictions
+        return error_rate, failed_predictions, successfull_predictions
 
 #-----------------Plotting -----------------------------
     def plot_images(self,image_list, plot_title): 
