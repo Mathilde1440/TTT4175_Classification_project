@@ -210,7 +210,9 @@ class MNIST_Classefier:
             ax[row, idx].legend()
 
         plt.tight_layout()
-        plt.show() 
+        plt.show(block=False) 
+        
+        return fig
 
     def plot_confusion_matrix(self, plot_title, class_labels):
         fig, ax = plt.subplots()
@@ -218,7 +220,8 @@ class MNIST_Classefier:
         sns.heatmap(self.confusion_matrix, annot=True, fmt="d", cmap="Blues",
             xticklabels=class_labels, yticklabels=class_labels, cbar=False, ax=ax)
         ax.set_title(plot_title)
-        pass
+
+        return fig
         
         
 

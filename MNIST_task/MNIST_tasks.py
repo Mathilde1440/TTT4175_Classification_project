@@ -1,0 +1,45 @@
+from number_classefier import MNIST_Classefier
+
+def solve_task_one(figure_names=None, save_figures=False):
+
+    mnist_klassefier =  MNIST_Classefier(file_path ='MNIST_task/NMIST_data_sets/data_all.mat', 
+                                                     num_classes=10, 
+                                                     class_labels=[0,1,2,3,4,5,6,7,8,9], 
+                                                     n_clusters=64, 
+                                                     chunk_size=10000)
+    
+    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN()
+
+    confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels)
+    failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions")
+    succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions" )
+
+    if(save_figures):
+        confusion_matrix_fig.savefig(figure_names[0])
+        failure_fig.savefig(figure_names[1])
+        succsess_fig.savefig(figure_names[2])
+
+def solve_task_two(figure_names=None, save_figures=False, k_neighbors = 1):
+
+    mnist_klassefier =  MNIST_Classefier(file_path ='MNIST_task/NMIST_data_sets/data_all.mat', 
+                                                     num_classes=10, 
+                                                     class_labels=[0,1,2,3,4,5,6,7,8,9], 
+                                                     n_clusters=64, 
+                                                     chunk_size=10000)
+    
+    total_predictions, failed_predictions, successfull_predictions = mnist_klassefier.run_faster_KNN(k_neighbors)
+
+    confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels)
+    failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions")
+    succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions" )
+
+    if(save_figures):
+        confusion_matrix_fig.savefig(figure_names[0])
+        failure_fig.savefig(figure_names[1])
+        succsess_fig.savefig(figure_names[2])
+
+
+
+solve_task_one()
+# solve_task_two()
+# solve_task_two(k_neighbors=7)
