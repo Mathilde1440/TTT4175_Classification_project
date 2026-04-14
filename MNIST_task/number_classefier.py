@@ -24,6 +24,8 @@ class MNIST_Classefier:
         self.templates = None
         self.template_label = None
 
+        self.confusion_matrix = None
+
         #load data from .mat file and transform to data frame
         data = sp.io.loadmat(file_path)
 
@@ -123,6 +125,7 @@ class MNIST_Classefier:
         total_predictions = []
         failed_prediction_index_list = []
         successfull_prediction_index_list = []
+        self.confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=int) 
 
         print(f'Started slow K-neares neighbor classification with k = {k_neighbors}')
         starting_time = time.Time()
@@ -132,14 +135,15 @@ class MNIST_Classefier:
             working_node = self.test_dataFrame.iloc[working_node_index].values
 
             prediction = self.KNN_predict(working_node, working_node_index, k_neighbors)
+            correct_label = prediction != working_node[0]
 
-            if (prediction != working_node[0]):
+            if (prediction != correct_label):
                 failed_prediction_index_list.append(working_node_index)
             else:
                 successfull_prediction_index_list.append(working_node_index)
 
             total_predictions.append(prediction)
-
+            self.confusion_matrix[correct_label, prediction] += 1
 
         endtime = time.Time()
         print(f'Finised classification. \n Duration = {endtime-starting_time}')
@@ -151,6 +155,7 @@ class MNIST_Classefier:
         total_predictions = []
         failed_prediction_index_list = []
         successfull_prediction_index_list = []
+        self.confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=int) 
 
         clusterTimeDuration = self.cluster_data()
 
@@ -161,13 +166,15 @@ class MNIST_Classefier:
             working_node = self.test_dataFrame.iloc[working_node_index].values
 
             prediction = self.fast_KNN_perdict(working_node, k_neighbors)
+            correct_label = prediction != working_node[0]
 
-            if (prediction != working_node[0]):
+            if (prediction != correct_label):
                 failed_prediction_index_list.append(working_node_index)
             else:
                 successfull_prediction_index_list.append(working_node_index)
 
             total_predictions.append(prediction)
+            self.confusion_matrix[correct_label, prediction] += 1
 
         endtime = time.Time()
         classification_time = endtime-starting_time
