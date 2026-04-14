@@ -94,7 +94,7 @@ class MNIST_Classefier:
         endtime = time.time()
         duration = endtime-starting_time
 
-        print(f'Finised clustering. \n Duration = {duration}')
+        print(f'Finised clustering. \nDuration = {duration}')
         return duration
 
     #--------Prediction------------------
@@ -167,7 +167,7 @@ class MNIST_Classefier:
         classification_time = endtime-starting_time
         print(f'Finised classification. Error rate: {error_rate} \n Classification duration = {classification_time} \n Total duratiom(with clustering): { cluster_duration+classification_time} ')
 
-        return error_rate, failed_predictions, successfull_predictions
+        return [classification_time,cluster_duration],error_rate, failed_predictions, successfull_predictions
 
 #-----------------Plotting -----------------------------
     def plot_images(self,image_list, plot_title, fignum = None): 
@@ -195,12 +195,14 @@ class MNIST_Classefier:
         
         return fig
 
-    def plot_confusion_matrix(self, plot_title, class_labels):
-        fig, ax = plt.subplots()
+    def plot_confusion_matrix(self, plot_title, class_labels,fignum = None):
+        fig, ax = plt.subplots(num = fignum)
 
         sns.heatmap(self.confusion_matrix, annot=True, fmt="d", cmap="Blues",
-            xticklabels=class_labels, yticklabels=class_labels, cbar=False, ax=ax)
+            xticklabels=class_labels, yticklabels=class_labels, cbar=True, ax=ax)
         ax.set_title(plot_title)
+        ax.set_xlabel("Correct class")
+        ax.set_ylabel("Predcited class")
 
         return fig
         
