@@ -3,8 +3,10 @@ import numpy as np
 import scipy as sp
 import sklearn
 import pandas as pd
+import time
 
 from collections import Counter
+
 
 
 class MNIST_Classefier:
@@ -45,6 +47,9 @@ class MNIST_Classefier:
         pass
 
     def cluster_data(self):
+        print("Started clustering...")
+        starting_time = time.Time()
+
         templates = []
         templatesLabels = []
 
@@ -69,6 +74,11 @@ class MNIST_Classefier:
         self.templates = np.vstac(templates)
         self.template_label = np.array(templatesLabels)
 
+        endtime = time.Time()
+        duration = endtime-starting_time
+
+        print(f'Finised clustering. \n Duration = {duration}')
+        return duration
 
     #--------Prediction------------------
 
@@ -95,7 +105,6 @@ class MNIST_Classefier:
 
         return prediction
             
-
     def fast_KNN_perdict(self, working_node, k_neighbors):
 
         distance = sp.spatial.distance.cdist(self.templates,working_node[1:].reshape(1,-1), metric='euclidean').flatten()
@@ -115,7 +124,8 @@ class MNIST_Classefier:
         failed_prediction_index_list = []
         successfull_prediction_index_list = []
 
-        prediction = None
+        print(f'Started slow K-neares neighbor classification with k = {k_neighbors}')
+        starting_time = time.Time()
 
         for working_node_index in range(self.metadataFrame['num_test']):
 
@@ -130,6 +140,10 @@ class MNIST_Classefier:
 
             total_predictions.append(prediction)
 
+
+        endtime = time.Time()
+        print(f'Finised classification. \n Duration = {endtime-starting_time}')
+
         return total_predictions, failed_prediction_index_list, successfull_prediction_index_list
     
 
@@ -138,7 +152,10 @@ class MNIST_Classefier:
         failed_prediction_index_list = []
         successfull_prediction_index_list = []
 
-        self.cluster_data()
+        clusterTimeDuration = self.cluster_data()
+
+        print(f'Started faster K-neares neighbor classification with k = {k_neighbors}')
+        starting_time = time.Time()
 
         for working_node_index in range(self.metadataFrame['num_test']):
             working_node = self.test_dataFrame.iloc[working_node_index].values
@@ -151,6 +168,10 @@ class MNIST_Classefier:
                 successfull_prediction_index_list.append(working_node_index)
 
             total_predictions.append(prediction)
+
+        endtime = time.Time()
+        classification_time = endtime-starting_time
+        print(f'Finised classification. \n Classification duration = {classification_time} \n Total duratiom(with clustering): { clusterTimeDuration+classification_time} ')
 
         return total_predictions, failed_prediction_index_list, successfull_prediction_index_list
 
