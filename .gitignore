@@ -6,3 +6,5 @@ __pycache__/
 NMIST_meta_data.csv 
 NMIST_test_set.csv
 NMIST_training_set.csv
+
+kladd.txt
