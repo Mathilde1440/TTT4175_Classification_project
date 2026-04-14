@@ -170,8 +170,8 @@ class MNIST_Classefier:
         return error_rate, failed_predictions, successfull_predictions
 
 #-----------------Plotting -----------------------------
-    def plot_images(self,image_list, plot_title): 
-        fig, ax = plt.subplots(2,2)
+    def plot_images(self,image_list, plot_title, fignum = None): 
+        fig, ax = plt.subplots(2,2, num = fignum)
         fig.suptitle(plot_title, fontsize=16)
 
         row = 0
@@ -189,7 +189,8 @@ class MNIST_Classefier:
             ax[row,idx].set_title(f'Correct: {correct_label}, Predcited: {image_list[image_index][1]} ')
             ax[row, idx].axis('off')
         plt.tight_layout()
-        plt.show()
+        #To prevent blocking, plt.show is not called here. It has to be called where the call to plot is located
+       
 
         
         return fig
