@@ -18,8 +18,10 @@ def solve_task_one(folder_path=None,figure_names=None, save_figures=False):
     confusion_matrix_fig_PCR = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels, PCR = True,fignum=2)
     failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions",3)
     succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions",4 )
-    # plt.show()
-    # plt.close('all')
+    
+    plt.show(block=False)
+    plt.pause(5)
+    plt.close('all')
     
     if(save_figures):
         confusion_matrix_fig.savefig(figure_names[0])
@@ -38,13 +40,12 @@ def solve_task_one(folder_path=None,figure_names=None, save_figures=False):
 
 
         time_min = int(time[0] / 60)
-        time_s = time[0] - time_min * 60
+        time_s = int(time[0] - time_min * 60)
 
         with open(os.path.join(destination_folder, 'stats_1.txt'), 'w') as f:
             f.write(f'Error rate: {error_rate}\n')
-            f.write(f'Failed predictions: {len(failed_predictions)}\n')
+            f.write(f'Failed predictions: {len(failed_predictions)}\n s')
             f.write(f'Total Classification time: {time[0]} ~ {time_min} min {time_s} s \n')
-
 
     return error_rate
 
@@ -58,13 +59,21 @@ def solve_task_two(folder_path=None,figure_names=None, save_figures=False, k_nei
     
     time,error_rate, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN(k_neighbors = k_neighbors , slow = False)
 
+    intersting_misclassifications = [[5,3], [3,8], [1, 7], [9,4]]
+    intersting_correctclassifications = [[1,1], [0,0], [2,2], [8,8]]
+
+    miscalc_plot = mnist_klassefier.find_prediction_indices(intersting_misclassifications, failed_predictions)
+    succsess_plot = mnist_klassefier.find_prediction_indices(intersting_correctclassifications, successfull_predictions)
+    #failed_predictions[:4]
+    #successfull_predictions[:4]
     confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels, fignum=1)
     confusion_matrix_fig_PCR = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels, PCR = True,fignum=2)
-    failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions",3)
-    succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions",4 )
+    failure_fig = mnist_klassefier.plot_images(miscalc_plot, "Failed predictions",3)
+    succsess_fig = mnist_klassefier.plot_images(succsess_plot, "Successful predictions",4 )
 
-    # plt.show()
-    # plt.close()
+    plt.show(block=False)
+    plt.pause(5)
+    plt.close('all')
 
     if(save_figures):
         confusion_matrix_fig.savefig(figure_names[0])
@@ -89,13 +98,13 @@ def solve_task_two(folder_path=None,figure_names=None, save_figures=False, k_nei
         with open(os.path.join(destination_folder, txt_filname), 'w') as f:
             f.write(f'Error rate: {error_rate}\n')
             f.write(f'Failed predictions: {len(failed_predictions)}\n')
-            f.write(f'Total Classification time: {time[0]}\n')
-            f.write(f'Cluster time:  {time[1]}\n')
-            f.write(f'Classification (wo. clustertime): {time[0]-time[1]}\n')
+            f.write(f'Total Classification time: {time[0]}\n s')
+            f.write(f'Cluster time:  {time[1]}\n s')
+            f.write(f'Classification (wo. clustertime): {time[0]+time[1]} s\n')
 
     return error_rate
 
-folderPath = 'new_plots_2'
+folderPath = 'test_plot_3'
 
 fig_labels_task1 = ['cm_t1.pdf',
                     'cm_PCR_t1.pdf',

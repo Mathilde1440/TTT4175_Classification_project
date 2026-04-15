@@ -45,10 +45,22 @@ class MNIST_Classefier:
 
 
     #---------Util member functions-----------------
+    def find_prediction_indices(self,prediction_list, classification_list):
+        index_list = []
+
+        for item in prediction_list:
+            for index in range(len(classification_list)):
+                if(classification_list[index][1]==item[0]) and (classification_list[index][2]==item[1]):
+                    if (classification_list[index]) not in index_list:
+                        index_list.append(classification_list[index])
+                        break
+
+        return index_list
+        
+
     def print_progress(self, working_index, last_progress_update, update_frequency):
         current_progress = working_index / self.metadataFrame['num_test'].values[0]*100
         new_milestone = None
-        # print(current_progress)
 
         if ( int(current_progress) >= int(last_progress_update) ):
 
@@ -122,7 +134,6 @@ class MNIST_Classefier:
             
 #-------------executions-----------------------
     def run_KNN(self, k_neighbors=1, slow = True, print_progress_updates = False):
-        # total_predictions = []
         failed_predictions = []
         successfull_predictions = []
         self.confusion_matrix = np.zeros((self.num_classes, self.num_classes), dtype=int) 
@@ -147,14 +158,13 @@ class MNIST_Classefier:
             
             correct_label = working_node[0]
 
-            metadata = [working_node_index, prediction]
+            metadata = [working_node_index, prediction, correct_label]
 
             if (prediction != correct_label):
                 failed_predictions.append(metadata)
             else:
                 successfull_predictions.append(metadata)
 
-            # total_predictions.append(prediction)
             self.confusion_matrix[correct_label, prediction] += 1
 
             if(print_progress_updates):
@@ -171,6 +181,7 @@ class MNIST_Classefier:
 
 #-----------------Plotting -----------------------------
     def plot_images(self,image_list, plot_title, fignum = None): 
+        sub_fig_lables = ['(a)', '(b)', '(c)', '(d)']
         fig, ax = plt.subplots(2,2, num = fignum)
         fig.suptitle(plot_title, fontsize=16)
 
@@ -186,13 +197,11 @@ class MNIST_Classefier:
             correct_label = image_data_plot[0]
 
             ax[row,idx].imshow(image_to_plot, cmap='gray') 
-            ax[row,idx].set_title(f'Correct: {correct_label}, Predcited: {image_list[image_index][1]} ')
+            ax[row,idx].set_title(f'{sub_fig_lables[image_index]} Correct: {correct_label}, Predcited: {image_list[image_index][1]} ')
             ax[row, idx].axis('off')
         plt.tight_layout()
         #To prevent blocking, plt.show is not called here. It has to be called where the call to plot is located
        
-
-        
         return fig
 
     def plot_confusion_matrix(self, plot_title, class_labels, PCR = False, fignum = None):
