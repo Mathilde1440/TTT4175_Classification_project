@@ -104,7 +104,7 @@ def solve_task_two(folder_path=None,figure_names=None, save_figures=False, k_nei
 
     return error_rate
 
-folderPath = 'test_plot_3'
+folderPath = 'test_plot_4'
 
 fig_labels_task1 = ['cm_t1.pdf',
                     'cm_PCR_t1.pdf',
