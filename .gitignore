@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 *.asv
+*.json
 
 #When the csv files are generated, they are to large to push to git
 NMIST_meta_data.csv 
