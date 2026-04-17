@@ -12,12 +12,20 @@ def solve_task_one(folder_path=None,figure_names=None, save_figures=False):
                                                      n_clusters=64, 
                                                      chunk_size=10000)
     
-    time, error_rate, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN(slow = True)
+    time, error_rate, failed_predictions, successfull_predictions = mnist_klassefier.run_KNN(print_progress_updates=True,slow = True)
+
+    intersting_misclassifications = [[5,3], [3,8], [1, 7], [9,4]]
+    intersting_correctclassifications = [[1,1], [0,0], [2,2], [8,8]]
+    miscalc_plot = mnist_klassefier.find_prediction_indices(intersting_misclassifications, failed_predictions)
+    succsess_plot = mnist_klassefier.find_prediction_indices(intersting_correctclassifications, successfull_predictions)
+
+    #failed_predictions[:4]
+    #successfull_predictions[:4]
 
     confusion_matrix_fig = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels,fignum=1)
     confusion_matrix_fig_PCR = mnist_klassefier.plot_confusion_matrix("Confusion matrix", mnist_klassefier.class_labels, PCR = True,fignum=2)
-    failure_fig = mnist_klassefier.plot_images(failed_predictions[:4], "Failed predictions",3)
-    succsess_fig = mnist_klassefier.plot_images(successfull_predictions[:4], "Successful predictions",4 )
+    failure_fig = mnist_klassefier.plot_images(miscalc_plot, "Failed predictions",3)
+    succsess_fig = mnist_klassefier.plot_images(succsess_plot, "Successful predictions",4 )
     
     plt.show(block=False)
     plt.pause(5)
@@ -104,7 +112,7 @@ def solve_task_two(folder_path=None,figure_names=None, save_figures=False, k_nei
 
     return error_rate
 
-folderPath = 'test_plot_3'
+folderPath = 'test_again_6' 
 
 fig_labels_task1 = ['cm_t1.pdf',
                     'cm_PCR_t1.pdf',

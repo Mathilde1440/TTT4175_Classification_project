@@ -1,0 +1,3 @@
+Error rate: 0.0309
+Failed predictions: 309
+ sTotal Classification time: 3149.095383644104 ~ 52 min 29 s 

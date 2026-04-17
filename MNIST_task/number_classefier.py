@@ -225,15 +225,3 @@ class MNIST_Classefier:
 
         return fig
         
-        
-
-# klassefier = MNIST_Classefier('MNIST_task/NMIST_data_sets/data_all.mat', 10, [0,1,2,3,4,5,6,7,8,9], 64, 10000)
-
-# print(klassefier.metadataFrame['num_test'].values[0])
-# image_list = [[0, 6],
-#               [1,4],
-#               [2,2]]
-              
-# klassefier.plot_images(image_list, "some plots")
-# # ]
-
