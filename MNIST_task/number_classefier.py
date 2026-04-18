@@ -11,7 +11,7 @@ import time
 from collections import Counter
 
 
-class MNIST_Classefier:
+class KNN_Classefier:
 
     def __init__(self, file_path, num_classes, class_labels, n_clusters, chunk_size): 
 
@@ -208,8 +208,8 @@ class MNIST_Classefier:
         fig, ax = plt.subplots(num = fignum)
         fmt="d"
 
-        xlabel = "Correct class"
-        ylable = "Predcited class"
+        ylabel = "True class"
+        xlabel = "Predcited class"
 
         if(PCR):
             self.confusion_matrix = (self.confusion_matrix) / self.confusion_matrix.sum(axis=1, keepdims=True) * 100
@@ -221,7 +221,7 @@ class MNIST_Classefier:
             xticklabels=class_labels, yticklabels=class_labels, cbar=True, ax=ax)
         ax.set_title(plot_title)
         ax.set_xlabel(xlabel)
-        ax.set_ylabel(ylable)
+        ax.set_ylabel(ylabel)
 
         return fig
         
