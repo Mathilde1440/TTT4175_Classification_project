@@ -86,4 +86,25 @@ for ax in axes[:, 1]:
     ax.set_ylabel("")
 
 plt.tight_layout()
+#plt.savefig("figures/first_and_last_30_for_training_plot.pdf", bbox_inches="tight")
+plt.show()
+
+# -------- MSE plotting --------
+fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
+fig.suptitle("Training Convergence (MSE)", fontsize=12)
+
+axes[0].plot(model_1.MSE_vector)
+axes[0].set_title("First 30 for training")
+axes[0].set_xlabel("Iteration")
+axes[0].set_ylabel("MSE")
+axes[0].grid(True, alpha=0.3)
+
+axes[1].plot(model_2.MSE_vector)
+axes[1].set_title("Last 30 for training")
+axes[1].set_xlabel("Iteration")
+axes[1].set_ylabel("")
+axes[1].grid(True, alpha=0.3)
+
+plt.tight_layout()
+#plt.savefig("figures/MSE_during_training_plot.pdf", bbox_inches="tight")
 plt.show()

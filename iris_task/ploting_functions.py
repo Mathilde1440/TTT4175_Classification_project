@@ -53,4 +53,5 @@ def plot_histigram(dataFrame_dict , n_bins, color_lis):
         ax[row, idx].legend()
 
     plt.tight_layout()
+    #plt.savefig("figures/histograms.pdf", bbox_inches="tight")
     plt.show()
