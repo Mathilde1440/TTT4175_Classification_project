@@ -58,14 +58,6 @@ data_class = iris_data_class(
     class_lables=["Iris-setosa", "Iris-versicolor", "Iris-virginica"],
     column_labels=['sepal_lenght', 'sepal_width', 'petal_length', 'petal_width', 'class'])
 
-# new_df = data_class.remove_data_colum(0)
-# print(new_df)
-# traning_data_set = data_class.generate_dataset(0,30)
-# plotting_set = data_class.generate_plotting_data(['class_1_csv.csv','class_2_csv.csv','class_3_csv.csv'],'iris_task/iris_data_sets/')
-# print(plotting_set)
-# data_class.remove_datacolum_from_plotting_data(plotting_set, 'sepal_lenght')
-# print(plotting_set)
-
 
 
 
