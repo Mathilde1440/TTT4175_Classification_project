@@ -1,5 +1,0 @@
-Error rate: 0.0564
-Failed predictions: 564
-Total Classification time: 5.228030204772949
-Cluster time:  4.3513343334198
-Classification (wo. clustertime): 0.8766958713531494
