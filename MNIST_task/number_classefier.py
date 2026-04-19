@@ -141,13 +141,11 @@ class KNN_Classefier:
         progress = -1
         cluster_duration = 0
         
-
         if (not slow):
             print(f'Started faster K-neares neighbor classification with k = {k_neighbors}')
             cluster_duration = self.cluster_data()
         else:
             print(f'Started slow K-neares neighbor classification with k = {k_neighbors}')
-
 
         starting_time = time.time()
                     
