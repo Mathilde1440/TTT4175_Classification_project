@@ -176,6 +176,6 @@ solve_fast_KNN(k_neighbors=1,
 solve_fast_KNN(k_neighbors=7, 
                 folder_path = folderPath,
                 figure_names=fig_labels_fast_KNN,
-                txt_filname=txt_filename_2,
+                txt_filname=txt_filename_4,
                 save_figures=True,
                 save_stats=True)

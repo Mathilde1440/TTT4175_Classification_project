@@ -215,7 +215,7 @@ class KNN_Classefier:
             self.confusion_matrix = (self.confusion_matrix) / self.confusion_matrix.sum(axis=1, keepdims=True) * 100
             fmt = ".1f"
             xlabel += ' [%]'
-            ylable += ' [%]'
+            ylabel += ' [%]'
 
         sns.heatmap(self.confusion_matrix, annot=True, fmt= fmt, cmap="Blues",
             xticklabels=class_labels, yticklabels=class_labels, cbar=True, ax=ax)
